@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="robots" content="noindex, nofollow"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Party Registration — Kingdom of Azzuria</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #c9a84c; --gold-d: rgba(201,168,76,0.14); --gold-b: rgba(201,168,76,0.28);
+      --bg: #13100a; --bg2: #1c1710; --bg3: rgba(255,255,255,0.03);
+      --text: #e8dcc8; --soft: #a09070; --dim: #6a5a3a; --faint: #221c10;
+      --red: #8b1a1a;
+    }
+    html, body { background: var(--bg); color: var(--text); font-family: 'EB Garamond', Georgia, serif; min-height: 100vh; }
+    ::-webkit-scrollbar { width: 5px; } ::-webkit-scrollbar-thumb { background: var(--gold-b); border-radius: 3px; }
+
+    /* ── Shell ── */
+    .shell { display: flex; min-height: 100vh; }
+    .left  { flex: 1; padding: 44px 40px 80px; max-width: 620px; }
+    .right { width: 340px; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; background: #0e0c07; border-left: 1px solid rgba(255,255,255,0.04); display: flex; flex-direction: column; }
+    @media(max-width:820px){ .shell{flex-direction:column} .right{width:100%;position:static;height:auto;border-left:none;border-top:1px solid rgba(255,255,255,0.06)} }
+
+    /* ── Header ── */
+    .brand { font-family:'Cinzel',serif; font-size: 9px; letter-spacing: 7px; color: var(--dim); text-transform: uppercase; margin-bottom: 6px; }
+    .title { font-family:'Cinzel',serif; font-size: clamp(18px, 3vw, 26px); color: var(--gold); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 28px; }
+    .divider { height: 1px; background: linear-gradient(to right, var(--gold-b), transparent); margin-bottom: 30px; }
+
+    /* ── Sections ── */
+    .sec { margin-bottom: 28px; }
+    .sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .sec-num { font-family:'Cinzel',serif; font-size: 8px; color: var(--gold); border: 1px solid var(--gold-b); border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sec-label { font-family:'Cinzel',serif; font-size: 9px; letter-spacing: 4px; color: var(--dim); text-transform: uppercase; flex: 1; }
+    .sec-label::after { content:''; display:inline-block; width:100%; }
+    .sec-rule { flex: 1; height: 1px; background: rgba(255,255,255,0.05); }
+    .sec-hint { font-size: 11px; color: var(--dim); line-height: 1.65; margin-bottom: 12px; font-style: italic; }
+
+    /* ── Fields ── */
+    .field { margin-bottom: 12px; }
+    .field label { display: block; font-family:'Cinzel',serif; font-size: 9px; letter-spacing: 3px; color: var(--dim); text-transform: uppercase; margin-bottom: 6px; }
+    input[type=text], textarea, input[type=color] { font-family: 'EB Garamond', Georgia, serif; }
+    .inp {
+      width: 100%; background: var(--bg3); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px; color: var(--text); font-size: 14px; padding: 10px 14px;
+      outline: none; transition: border-color 0.18s;
+    }
+    .inp:focus { border-color: var(--gold-b); }
+    textarea.inp { resize: vertical; min-height: 70px; line-height: 1.65; }
+
+    /* ── Color ── */
+    .color-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .color-swatch-big { width: 40px; height: 40px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.1); flex-shrink: 0; transition: background 0.2s; }
+    input[type=color] { width: 40px; height: 40px; border: 1px solid var(--gold-b); border-radius: 5px; cursor: pointer; background: none; padding: 2px; flex-shrink: 0; }
+    .swatches { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 4px; }
+    .sw { width: 24px; height: 24px; border-radius: 4px; cursor: pointer; border: 2px solid transparent; transition: border-color 0.12s, transform 0.1s; }
+    .sw:hover { border-color: rgba(255,255,255,0.4); transform: scale(1.1); }
+    .sw.on { border-color: white; transform: scale(1.15); }
+
+    /* ── Chips ── */
+    .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 5px; }
+    .chip {
+      padding: 5px 12px; cursor: pointer; font-family:'EB Garamond',serif; font-size: 12px;
+      border-radius: 3px; border: 1px solid rgba(255,255,255,0.07); color: var(--soft);
+      background: var(--bg3); transition: all 0.13s; user-select: none;
+    }
+    .chip:hover { border-color: rgba(255,255,255,0.16); color: var(--text); }
+    .chip.on-class { border-color: var(--cc,var(--gold-b)); background: color-mix(in srgb, var(--cc,var(--gold)) 10%, transparent); color: var(--cc,var(--gold)); }
+    .chip.on-region { border-color: var(--gold-b); background: var(--gold-d); color: var(--gold); }
+    .chip.on-tag { border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.05); color: var(--text); }
+    .chip.chip-blocked { opacity: 0.28; cursor: not-allowed; text-decoration: line-through; text-decoration-color: rgba(200,60,60,0.5); border-color: rgba(200,60,60,0.12) !important; }
+    .chip.chip-blocked:hover { opacity: 0.38; border-color: rgba(200,60,60,0.3) !important; color: #c46060; text-decoration-color: rgba(200,60,60,0.7); }
+    .chip.chip-at-limit { opacity: 0.35; cursor: not-allowed; }
+    .chip.chip-at-limit:hover { opacity: 0.45; }
+    .limit-note { font-size: 9px; color: var(--dim); letter-spacing: 1px; font-family:'Cinzel',serif; margin-top: 4px; }
+    .cat-note { font-size: 8px; color: var(--dim); letter-spacing: 1px; font-family:'Cinzel',serif; margin-top: 3px; min-height: 12px; transition: color 0.2s; }
+    .cat-note.at-limit { color: rgba(201,168,76,0.6); }
+    /* conflict flash */
+    #conflictFlash { position:fixed; bottom:28px; left:50%; transform:translateX(-50%); z-index:999; pointer-events:none;
+      background:rgba(30,16,10,0.96); border:1px solid rgba(200,60,60,0.45); color:#c46060;
+      padding:8px 18px; border-radius:4px; font-family:'EB Garamond',serif; font-size:12px; font-style:italic;
+      white-space:nowrap; opacity:0; transition:opacity 0.18s; }
+    #conflictFlash.show { opacity:1; }
+
+    /* ── Tag groups ── */
+    .tag-group { margin-bottom: 10px; }
+    .tag-group-lbl { font-size: 9px; color: var(--dim); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 5px; font-family:'Cinzel',serif; }
+
+    /* ── Chars ── */
+    .char-row { display: flex; gap: 6px; margin-bottom: 6px; }
+    .char-row .inp { font-size: 13px; }
+    .char-role { flex: 0 0 130px !important; color: var(--dim) !important; font-size: 12px !important; }
+    .rm-btn { background: none; border: 1px solid rgba(255,255,255,0.07); border-radius: 4px; color: var(--dim); cursor: pointer; padding: 0 10px; font-size: 14px; transition: all 0.13s; }
+    .rm-btn:hover { border-color: rgba(200,60,60,0.35); color: #c46060; }
+    .add-row-btn { width: 100%; padding: 8px; background: var(--bg3); border: 1px dashed rgba(255,255,255,0.09); border-radius: 4px; color: var(--dim); cursor: pointer; font-family:'Cinzel',serif; font-size: 9px; letter-spacing: 3px; text-transform: uppercase; transition: all 0.13s; margin-top: 4px; }
+    .add-row-btn:hover { border-color: var(--gold-b); color: var(--gold); background: var(--gold-d); }
+
+    /* ── Preview col ── */
+    .right-inner { padding: 28px 22px; flex: 1; }
+    .right-label { font-family:'Cinzel',serif; font-size: 9px; letter-spacing: 4px; color: var(--dim); text-transform: uppercase; margin-bottom: 14px; }
+
+    /* Party preview card */
+    .pcard { border: 1px solid rgba(255,255,255,0.08); border-radius: 5px; overflow: hidden; margin-bottom: 22px; }
+    .pcard-accent { height: 5px; }
+    .pcard-body { padding: 16px 18px; background: rgba(255,255,255,0.02); }
+    .pcard-name { font-family:'Cinzel',serif; font-size: 16px; letter-spacing: 2px; margin-bottom: 2px; }
+    .pcard-desc { font-size: 12px; color: var(--soft); font-style: italic; line-height: 1.6; margin-top: 6px; }
+    .badges { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+    .badge { font-family:'Cinzel',serif; font-size: 8px; letter-spacing: 1px; padding: 2px 7px; border-radius: 3px; text-transform: uppercase; }
+    .pcard-chars { margin-top: 10px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.05); }
+    .pcard-char { display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.03); font-size: 11px; }
+
+    /* Submit */
+    .submit-area { margin-top: 4px; }
+    .submit-btn {
+      width: 100%; padding: 13px; cursor: pointer; font-family:'Cinzel',serif;
+      font-size: 10px; letter-spacing: 4px; text-transform: uppercase; border-radius: 4px;
+      background: var(--gold-d); border: 1px solid var(--gold-b); color: var(--gold);
+      transition: all 0.15s; margin-bottom: 8px;
+    }
+    .submit-btn:hover:not(:disabled) { background: rgba(201,168,76,0.22); }
+    .submit-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .missing-note { font-size: 10px; color: var(--dim); font-style: italic; text-align: center; line-height: 1.6; min-height: 32px; }
+    .status-msg { text-align: center; font-family:'Cinzel',serif; font-size: 9px; letter-spacing: 3px; padding: 8px; border-radius: 4px; margin-bottom: 8px; }
+    .status-ok  { background: rgba(80,160,100,0.1); border: 1px solid rgba(80,160,100,0.3); color: #6db87a; }
+    .status-err { background: rgba(200,60,60,0.1);  border: 1px solid rgba(200,60,60,0.25); color: #c46060; white-space:pre-wrap; word-break:break-word; text-align:left; font-size:10px; line-height:1.6; }
+    .status-wait{ background: var(--gold-d); border: 1px solid var(--gold-b); color: var(--gold); }
+
+    /* ── Discord post block ── */
+    .discord-section { margin-bottom: 18px; }
+    .discord-post {
+      background: #1e1a12; border: 1px solid rgba(255,255,255,0.07); border-radius: 4px;
+      padding: 10px 12px; font-family: 'Courier New', monospace; font-size: 10px;
+      color: #b0a080; line-height: 1.7; white-space: pre-wrap; word-break: break-word;
+      max-height: 200px; overflow-y: auto; margin-bottom: 8px; user-select: all;
+    }
+    .copy-btn {
+      width: 100%; padding: 9px; cursor: pointer; font-family:'Cinzel',serif;
+      font-size: 9px; letter-spacing: 3px; text-transform: uppercase; border-radius: 4px;
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.12);
+      color: var(--soft); transition: all 0.15s; margin-bottom: 10px;
+    }
+    .copy-btn:hover { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.22); color: var(--text); }
+    .copy-btn.copied { background: rgba(80,160,100,0.12); border-color: rgba(80,160,100,0.4); color: #6db87a; }
+    .discord-instructions {
+      font-size: 10px; color: var(--dim); line-height: 1.7; font-style: italic;
+      padding: 10px 12px; background: rgba(88,101,242,0.06);
+      border: 1px solid rgba(88,101,242,0.18); border-radius: 4px; margin-bottom: 10px;
+    }
+    .discord-instructions strong { color: rgba(88,101,242,0.9); font-style: normal; font-family:'Cinzel',serif; font-size: 9px; letter-spacing: 1px; }
+    .copy-gate-note { font-size: 9px; color: rgba(200,60,60,0.6); text-align:center; font-style:italic; margin-bottom:6px; transition: opacity 0.2s; }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- ══ LEFT ══════════════════════════════════════════════════════ -->
+  <div class="left">
+    <div class="brand">Kingdom of Azzuria</div>
+    <div class="title">Party Registration</div>
+    <div class="divider"></div>
+
+    <!-- I — Identity -->
+    <div class="sec">
+      <div class="sec-head"><span class="sec-num">I</span><span class="sec-label">Identity</span><div class="sec-rule"></div></div>
+      <div class="field"><label>Party Name</label><input id="iName" class="inp" type="text" placeholder="e.g. Constitutional Liberal Party" oninput="upd()"/></div>
+      <div class="field">
+        <label>Colour</label>
+        <div class="color-row">
+          <input type="color" id="iColorPicker" value="#4a90c0" oninput="syncCol(this.value)"/>
+          <div class="color-swatch-big" id="iColorSwatch" style="background:#4a90c0"></div>
+          <input id="iColorHex" class="inp" type="text" value="#4a90c0" placeholder="#rrggbb" style="flex:1;font-family:monospace;font-size:13px" oninput="syncCol(this.value)"/>
+        </div>
+        <div class="swatches" id="swatchRow"></div>
+      </div>
+      <div class="field"><label>Description</label><textarea id="iDesc" class="inp" placeholder="One or two sentences — what does this party believe the kingdom should become?" oninput="upd()"></textarea></div>
+    </div>
+
+    <!-- II — Class base -->
+    <div class="sec">
+      <div class="sec-head"><span class="sec-num">II</span><span class="sec-label">Class Base</span><div class="sec-rule"></div></div>
+      <div class="sec-hint">Choose 1–3 classes your party represents. Laws that bonus or malus these classes have <strong>doubled effect</strong> for you.</div>
+      <div class="chips" id="classChips"></div>
+      <div class="limit-note" id="classNote">Select 1–3 classes</div>
+    </div>
+
+    <!-- III — Regional base -->
+    <div class="sec">
+      <div class="sec-head"><span class="sec-num">III</span><span class="sec-label">Regional Base</span><div class="sec-rule"></div></div>
+      <div class="sec-hint">Choose 2–4 regions where your party has deep roots.</div>
+      <div class="chips" id="regionChips"></div>
+      <div class="limit-note" id="regionNote">Select 2–4 regions</div>
+    </div>
+
+    <!-- IV — Ideology -->
+    <div class="sec">
+      <div class="sec-head"><span class="sec-num">IV</span><span class="sec-label">Ideology</span><div class="sec-rule"></div></div>
+      <div class="sec-hint">Choose up to 4 tags per category. Contradictory positions are blocked once you make a choice.</div>
+      <div class="tag-group"><div class="tag-group-lbl">Economic</div><div class="chips" id="tagsEcon"></div><div class="cat-note" id="noteEcon"></div></div>
+      <div class="tag-group"><div class="tag-group-lbl">Social</div><div class="chips" id="tagsSoc"></div><div class="cat-note" id="noteSoc"></div></div>
+      <div class="tag-group"><div class="tag-group-lbl">Constitutional</div><div class="chips" id="tagsCon"></div><div class="cat-note" id="noteCon"></div></div>
+      <div class="tag-group"><div class="tag-group-lbl">Disposition</div><div class="chips" id="tagsDis"></div><div class="cat-note" id="noteDis"></div></div>
+      <div class="tag-group"><div class="tag-group-lbl">Foreign Policy</div><div class="chips" id="tagsForeign"></div><div class="cat-note" id="noteForeign"></div></div>
+      <div class="limit-note" id="tagNote">Select at least 2 tags total</div>
+    </div>
+
+    <!-- V — Members -->
+    <div class="sec">
+      <div class="sec-head"><span class="sec-num">V</span><span class="sec-label">Notable Members</span><div class="sec-rule"></div></div>
+      <div class="sec-hint">Key figures of your party — for flavor and roleplay.</div>
+      <div id="charList"></div>
+      <button class="add-row-btn" onclick="addChar()">+ Add Member</button>
+    </div>
+  </div>
+
+  <!-- ══ RIGHT ═════════════════════════════════════════════════════ -->
+  <div class="right">
+    <div class="right-inner">
+      <div class="right-label">Preview</div>
+
+      <div class="pcard" id="pcard">
+        <div class="pcard-accent" id="pcAccent" style="background:#4a90c0"></div>
+        <div class="pcard-body">
+          <div class="pcard-name" id="pcName" style="color:#4a90c0">Party Name</div>
+          <div class="badges" id="pcClasses"></div>
+          <div class="pcard-desc" id="pcDesc">Your description will appear here.</div>
+          <div class="badges" id="pcRegions" style="margin-top:8px"></div>
+          <div class="badges" id="pcTags" style="margin-top:6px"></div>
+          <div class="pcard-chars" id="pcChars" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- Discord post section -->
+      <div class="discord-section" id="discordSection" style="display:none">
+        <div class="right-label" style="margin-bottom:8px">Post to Discord</div>
+        <div class="discord-post" id="discordPost"></div>
+        <button class="copy-btn" id="copyBtn" onclick="copyPost()">📋 Copy Post Text</button>
+        <div class="discord-instructions">
+          <strong>How to post on Discord:</strong><br/>
+          1. Go to <strong>#party-registry</strong><br/>
+          2. Start a new post (Forum channel)<br/>
+          3. Paste the copied text as the post body<br/>
+          4. Attach your party's flag or crest as an image<br/>
+          5. Set the post title to your party name<br/>
+          6. Submit — the GM will review and register you
+        </div>
+      </div>
+
+      <div class="submit-area">
+        <div class="right-label">Submit to GM</div>
+        <div id="statusMsg"></div>
+        <div class="missing-note" id="missingNote"></div>
+        <div class="copy-gate-note" id="copyGateNote" style="display:none">Copy your Discord post first before submitting.</div>
+        <button class="submit-btn" id="submitBtn" onclick="submitParty()" disabled>Submit for Approval</button>
+        <div style="font-size:9px;color:var(--dim);text-align:center;line-height:1.6;font-style:italic">
+          Your party will be sent to the GM for review.<br/>You'll be added to the game once approved.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="conflictFlash"></div>
+
+<script>
+  const JSONBIN_KEY = "$2a$10$Q2mm4WgDkcwCwq8Q/ipeGOvfbd2xII0YhL9zrPuJOeJHVL6wLap8e";
+  const JSONBIN_BIN = "69ac98d3d0ea881f40fa3593";
+
+  const CLASSES  = ["Nobles","Bureaucrats","Merchants","Industrialists","Church","Intellectuals","Rural Workers","Factory Workers"];
+  const CL_COLS  = ["#c9a84c","#7a9cc4","#6db87a","#c47a5a","#9b7fba","#c4a96b","#8fae7a","#a08060"];
+  const REGIONS  = ["Valdorenza","Montecastre","Colleverdi","Rocchevalle","Pietramonforte","Sestria","Castelfalco","Varazzino","Mombarcaro","Torremezzo","Fontaniglia","Rivoltasso","Verre","Cassinasco"];
+
+  // Category key → display id, note id, tags, per-cat limit
+  const CAT_LIMIT = 4;
+  const CATS = [
+    { key:"Econ",    chipsId:"tagsEcon",    noteId:"noteEcon",    tags:[
+      "Free Trade","Protectionism","Land Reform","Industrialisation","Agrarianism","Fiscal Conservatism",
+      "Public Works","Laissez-faire","State Intervention","Cooperative Labour","Railway Expansion",
+      "Tax Reform","Debt Cancellation","Private Property","Mining Rights","Grain Price Controls",
+    ]},
+    { key:"Soc",     chipsId:"tagsSoc",     noteId:"noteSoc",     tags:[
+      "Clericalism","Secularism","Anti-Clericalism","Social Order","Popular Education","Press Freedom",
+      "Workers' Rights","Tradition","Women's Education","Poor Relief","Temperance","Civic Nationalism",
+      "Cultural Revival","National Unity","Public Health","Penal Reform",
+    ]},
+    { key:"Con",     chipsId:"tagsCon",     noteId:"noteCon",     tags:[
+      "Absolute Monarchy","Constitutional Monarchy","Parliamentary Reform","Federalism","Centralism",
+      "Loyalism","Expanded Suffrage","Rule of Law","Universal Suffrage","Property Suffrage",
+      "Senate Reform","Judicial Independence","Emergency Powers","Republican Sympathies","Local Autonomy","Bicameralism",
+    ]},
+    { key:"Dis",     chipsId:"tagsDis",     noteId:"noteDis",     tags:[
+      "Moderate","Radical","Conservative","Progressive","Opportunist","Principled","Reformist",
+      "Reactionary","Populist","Elitist","Pragmatist","Idealist","Nationalist","Internationalist","Paternalist","Militarist",
+    ]},
+    { key:"Foreign", chipsId:"tagsForeign", noteId:"noteForeign", tags:[
+      "Expansionism","Non-Intervention","Alliance-Seeking","Isolationism",
+      "Naval Power","Continental Focus","Revanchism","Mediation",
+      "Border Security","Sphere of Influence","Peaceful Coexistence","Military Readiness",
+      "Tributary Ambitions","Commerce Over Arms","Defensive Posture","Diplomatic Primacy",
+    ]},
+  ];
+
+  // tag → its category key (for per-cat counting)
+  const TAG_CAT = {};
+  CATS.forEach(cat => cat.tags.forEach(t => { TAG_CAT[t] = cat.key; }));
+
+  // Pairs of mutually exclusive tags — one direction only needed; code makes it symmetric
+  const CONTRADICTION_PAIRS = [
+    // Economic
+    ["Free Trade",          "Protectionism"],
+    ["Laissez-faire",       "State Intervention"],
+    ["Laissez-faire",       "Cooperative Labour"],
+    ["Laissez-faire",       "Protectionism"],
+    ["Laissez-faire",       "Public Works"],
+    ["Laissez-faire",       "Grain Price Controls"],
+    ["State Intervention",  "Private Property"],
+    ["Agrarianism",         "Industrialisation"],
+    ["Cooperative Labour",  "Private Property"],
+    ["Private Property",    "Debt Cancellation"],
+    ["Debt Cancellation",   "Fiscal Conservatism"],
+    ["Fiscal Conservatism", "Public Works"],
+    // Social
+    ["Clericalism",         "Secularism"],
+    ["Clericalism",         "Anti-Clericalism"],
+    ["Tradition",           "Popular Education"],
+    ["Tradition",           "Women's Education"],
+    ["Tradition",           "Cultural Revival"],
+    ["Social Order",        "Press Freedom"],
+    // Constitutional
+    ["Absolute Monarchy",   "Constitutional Monarchy"],
+    ["Absolute Monarchy",   "Parliamentary Reform"],
+    ["Absolute Monarchy",   "Expanded Suffrage"],
+    ["Absolute Monarchy",   "Universal Suffrage"],
+    ["Absolute Monarchy",   "Republican Sympathies"],
+    ["Absolute Monarchy",   "Judicial Independence"],
+    ["Absolute Monarchy",   "Senate Reform"],
+    ["Absolute Monarchy",   "Local Autonomy"],
+    ["Absolute Monarchy",   "Bicameralism"],
+    ["Constitutional Monarchy", "Republican Sympathies"],
+    ["Constitutional Monarchy", "Universal Suffrage"],
+    ["Republican Sympathies",   "Loyalism"],
+    ["Expanded Suffrage",   "Property Suffrage"],
+    ["Universal Suffrage",  "Property Suffrage"],
+    ["Federalism",          "Centralism"],
+    ["Emergency Powers",    "Judicial Independence"],
+    ["Local Autonomy",      "Centralism"],
+    // Disposition
+    ["Moderate",            "Radical"],
+    ["Moderate",            "Reactionary"],
+    ["Radical",             "Conservative"],
+    ["Radical",             "Reactionary"],
+    ["Conservative",        "Progressive"],
+    ["Progressive",         "Reactionary"],
+    ["Reactionary",         "Reformist"],
+    ["Populist",            "Elitist"],
+    ["Nationalist",         "Internationalist"],
+    ["Idealist",            "Opportunist"],
+    ["Opportunist",         "Principled"],
+    ["Militarist",          "Non-Intervention"],
+    ["Militarist",          "Peaceful Coexistence"],
+    ["Militarist",          "Commerce Over Arms"],
+    ["Militarist",          "Diplomatic Primacy"],
+    // Foreign
+    ["Expansionism",        "Non-Intervention"],
+    ["Expansionism",        "Isolationism"],
+    ["Expansionism",        "Peaceful Coexistence"],
+    ["Expansionism",        "Commerce Over Arms"],
+    ["Expansionism",        "Defensive Posture"],
+    ["Non-Intervention",    "Alliance-Seeking"],
+    ["Non-Intervention",    "Revanchism"],
+    ["Non-Intervention",    "Sphere of Influence"],
+    ["Non-Intervention",    "Tributary Ambitions"],
+    ["Isolationism",        "Alliance-Seeking"],
+    ["Isolationism",        "Revanchism"],
+    ["Isolationism",        "Sphere of Influence"],
+    ["Isolationism",        "Naval Power"],
+    ["Isolationism",        "Tributary Ambitions"],
+    ["Isolationism",        "Diplomatic Primacy"],
+    ["Peaceful Coexistence","Revanchism"],
+    ["Peaceful Coexistence","Sphere of Influence"],
+    ["Peaceful Coexistence","Tributary Ambitions"],
+    ["Commerce Over Arms",  "Military Readiness"],
+    ["Commerce Over Arms",  "Naval Power"],
+    ["Defensive Posture",   "Expansionism"],
+    ["Defensive Posture",   "Tributary Ambitions"],
+    ["Border Security",     "Sphere of Influence"],
+    ["Diplomatic Primacy",  "Military Readiness"],
+    ["Diplomatic Primacy",  "Revanchism"],
+    ["Diplomatic Primacy",  "Tributary Ambitions"],
+  ];
+
+  // Build symmetric lookup: tag → set of tags it conflicts with
+  const CONTRADICTIONS = {};
+  CONTRADICTION_PAIRS.forEach(([a,b]) => {
+    (CONTRADICTIONS[a] = CONTRADICTIONS[a]||new Set()).add(b);
+    (CONTRADICTIONS[b] = CONTRADICTIONS[b]||new Set()).add(a);
+  });
+
+  const SWATCHES = ["#c94a4a","#c97a4a","#c9a84c","#8ab84a","#4aab6a","#4a8fd0","#6a60c0","#a060c0","#c060a0","#c06080","#708090","#9a8050"];
+
+  // tag → its chip element
+  const TAG_ELS = {};
+
+  let S = { name:"", color:"#4a90c0", desc:"", classes:[], regions:[], tags:[], chars:[] };
+  let hasCopied = false;
+
+  // ── Init ─────────────────────────────────────────────────────────
+  function init() {
+    const sw = document.getElementById("swatchRow");
+    SWATCHES.forEach(c => {
+      const d = Object.assign(document.createElement("div"), {className:"sw", title:c});
+      d.style.background = c;
+      d.onclick = () => syncCol(c);
+      sw.appendChild(d);
+    });
+
+    CLASSES.forEach((cls, i) => {
+      const b = chip(cls);
+      b.style.setProperty("--cc", CL_COLS[i]);
+      b.dataset.classIdx = i;
+      b.onclick = () => toggleClass(i);
+      document.getElementById("classChips").appendChild(b);
+    });
+
+    REGIONS.forEach((r, i) => {
+      const b = chip(r);
+      b.dataset.regionIdx = i;
+      b.onclick = () => toggleRegion(i);
+      document.getElementById("regionChips").appendChild(b);
+    });
+
+    CATS.forEach(cat => {
+      const el = document.getElementById(cat.chipsId);
+      cat.tags.forEach(t => {
+        const b = chip(t);
+        TAG_ELS[t] = b;
+        b.onclick = () => toggleTag(t);
+        el.appendChild(b);
+      });
+    });
+
+    addChar();
+    upd();
+  }
+
+  function chip(label) {
+    const b = document.createElement("div");
+    b.className = "chip"; b.textContent = label;
+    return b;
+  }
+
+  // ── Color ─────────────────────────────────────────────────────────
+  function syncCol(v) {
+    if (!/^#[0-9a-fA-F]{3,6}$/.test(v.trim())) return;
+    S.color = v.trim();
+    document.getElementById("iColorPicker").value = S.color;
+    document.getElementById("iColorHex").value    = S.color;
+    document.getElementById("iColorSwatch").style.background = S.color;
+    document.querySelectorAll(".sw").forEach(s => s.classList.toggle("on", s.title === S.color));
+    upd();
+  }
+
+  // ── Conflict flash ────────────────────────────────────────────────
+  let flashTimer = null;
+  function showFlash(msg, isConflict=true) {
+    const el = document.getElementById("conflictFlash");
+    el.textContent = msg;
+    el.style.borderColor = isConflict ? "rgba(200,60,60,0.45)" : "rgba(201,168,76,0.45)";
+    el.style.color        = isConflict ? "#c46060" : "#c9a84c";
+    el.classList.add("show");
+    clearTimeout(flashTimer);
+    flashTimer = setTimeout(() => el.classList.remove("show"), 2400);
+  }
+
+  // ── Class chip state refresh ──────────────────────────────────────
+  function refreshClassStates() {
+    const atLimit = S.classes.length >= 3;
+    document.querySelectorAll("#classChips .chip").forEach(el => {
+      const i = Number(el.dataset.classIdx);
+      const isOn = S.classes.includes(i);
+      el.classList.toggle("on-class",      isOn);
+      el.classList.toggle("chip-at-limit", !isOn && atLimit);
+      el.title = (!isOn && atLimit) ? "Limit of 3 classes reached" : "";
+    });
+    const n = S.classes.length;
+    document.getElementById("classNote").textContent =
+      n === 0 ? "Select 1–3 classes" :
+      n === 3 ? "3/3 — limit reached" :
+      `${n} selected`;
+  }
+
+  // ── Region chip state refresh ─────────────────────────────────────
+  function refreshRegionStates() {
+    const atLimit = S.regions.length >= 4;
+    document.querySelectorAll("#regionChips .chip").forEach(el => {
+      const i = Number(el.dataset.regionIdx);
+      const isOn = S.regions.includes(i);
+      el.classList.toggle("on-region",     isOn);
+      el.classList.toggle("chip-at-limit", !isOn && atLimit);
+      el.title = (!isOn && atLimit) ? "Limit of 4 regions reached" : "";
+    });
+    const n = S.regions.length;
+    document.getElementById("regionNote").textContent =
+      n === 0 ? "Select 2–4 regions" :
+      n === 4 ? "4/4 — limit reached" :
+      `${n} selected`;
+  }
+
+  // ── Tag state refresh (per-category limits) ───────────────────────
+  function refreshTagStates() {
+    // Count per category
+    const catCounts = {};
+    CATS.forEach(cat => { catCounts[cat.key] = 0; });
+    S.tags.forEach(t => { const k = TAG_CAT[t]; if (k) catCounts[k]++; });
+
+    // Build global blocked set from contradictions
+    const blocked = new Set();
+    S.tags.forEach(t => {
+      (CONTRADICTIONS[t]||new Set()).forEach(c => blocked.add(c));
+    });
+
+    Object.entries(TAG_ELS).forEach(([t, el]) => {
+      const isOn      = S.tags.includes(t);
+      const isBlocked = !isOn && blocked.has(t);
+      const catFull   = !isOn && !isBlocked && catCounts[TAG_CAT[t]] >= CAT_LIMIT;
+
+      el.classList.toggle("on-tag",        isOn);
+      el.classList.toggle("chip-blocked",  isBlocked);
+      el.classList.toggle("chip-at-limit", catFull);
+
+      if (isBlocked) {
+        const conflicts = S.tags.filter(s => (CONTRADICTIONS[s]||new Set()).has(t));
+        el.title = `Conflicts with: ${conflicts.join(", ")}`;
+      } else if (catFull) {
+        el.title = `Limit of ${CAT_LIMIT} per category reached`;
+      } else {
+        el.title = "";
+      }
+    });
+
+    // Update per-category notes
+    CATS.forEach(cat => {
+      const n = catCounts[cat.key];
+      const noteEl = document.getElementById(cat.noteId);
+      if (!noteEl) return;
+      if (n === 0) { noteEl.textContent = ""; noteEl.classList.remove("at-limit"); }
+      else if (n >= CAT_LIMIT) { noteEl.textContent = `${n}/${CAT_LIMIT} — limit reached`; noteEl.classList.add("at-limit"); }
+      else { noteEl.textContent = `${n} selected`; noteEl.classList.remove("at-limit"); }
+    });
+
+    const total = S.tags.length;
+    document.getElementById("tagNote").textContent =
+      total === 0 ? `Select at least 2 tags total (up to ${CAT_LIMIT} per category)` :
+      total < 2   ? `${total} selected — need at least 2` :
+      `${total} total`;
+  }
+
+  // ── Toggles ───────────────────────────────────────────────────────
+  function toggleClass(i) {
+    if (S.classes.includes(i)) {
+      S.classes = S.classes.filter(x => x !== i);
+    } else {
+      if (S.classes.length >= 3) { showFlash("Limit of 3 classes reached", false); return; }
+      S.classes.push(i);
+    }
+    refreshClassStates();
+    upd();
+  }
+  function toggleRegion(i) {
+    if (S.regions.includes(i)) {
+      S.regions = S.regions.filter(x => x !== i);
+    } else {
+      if (S.regions.length >= 4) { showFlash("Limit of 4 regions reached", false); return; }
+      S.regions.push(i);
+    }
+    refreshRegionStates();
+    upd();
+  }
+  function toggleTag(t) {
+    if (S.tags.includes(t)) {
+      S.tags = S.tags.filter(x => x !== t);
+    } else {
+      const conflicts = S.tags.filter(s => (CONTRADICTIONS[s]||new Set()).has(t));
+      if (conflicts.length) {
+        showFlash(`"${t}" conflicts with: ${conflicts.join(", ")}`, true);
+        return;
+      }
+      const catKey = TAG_CAT[t];
+      const catCount = S.tags.filter(s => TAG_CAT[s] === catKey).length;
+      if (catCount >= CAT_LIMIT) {
+        showFlash(`${CAT_LIMIT} tags already selected in this category`, false);
+        return;
+      }
+      S.tags.push(t);
+    }
+    refreshTagStates();
+    upd();
+  }
+
+  // ── Chars ─────────────────────────────────────────────────────────
+  function addChar() {
+    const row = document.createElement("div");
+    row.className = "char-row";
+    row.innerHTML = `<input class="inp" type="text" placeholder="Name" oninput="readChars()"/>
+      <input class="inp char-role" type="text" placeholder="Role / title" oninput="readChars()"/>
+      <button class="rm-btn" onclick="this.closest('.char-row').remove();readChars()">×</button>`;
+    document.getElementById("charList").appendChild(row);
+  }
+  function readChars() {
+    S.chars = [];
+    document.querySelectorAll(".char-row").forEach(row => {
+      const [n,r] = row.querySelectorAll("input");
+      if (n.value.trim()) S.chars.push({name:n.value.trim(), role:r.value.trim()});
+    });
+    upd();
+  }
+
+  // ── Discord post builder ──────────────────────────────────────────
+  function buildDiscordText() {
+    const name    = S.name    || "Unnamed Party";
+    const desc    = S.desc    || "(no description)";
+    const classes = S.classes.map(i => CLASSES[i]);
+    const regions = S.regions.map(i => REGIONS[i]);
+
+    // Group tags by category
+    const tagsBycat = {};
+    CATS.forEach(cat => { tagsBycat[cat.key] = []; });
+    S.tags.forEach(t => { const k = TAG_CAT[t]; if (k) tagsBycat[k].push(t); });
+    const catLabels = { Econ:"Economic", Soc:"Social", Con:"Constitutional", Dis:"Disposition", Foreign:"Foreign Policy" };
+
+    let lines = [];
+    lines.push(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+    lines.push(`🏛  ${name.toUpperCase()}`);
+    lines.push(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+    lines.push(``);
+    lines.push(desc);
+    lines.push(``);
+    lines.push(`── Class Base ─────────────────────`);
+    lines.push(classes.length ? classes.map(c => `  · ${c}`).join("\n") : "  (none selected)");
+    lines.push(``);
+    lines.push(`── Regional Base ──────────────────`);
+    lines.push(regions.length ? regions.map(r => `  · ${r}`).join("\n") : "  (none selected)");
+    lines.push(``);
+    lines.push(`── Ideology ───────────────────────`);
+    CATS.forEach(cat => {
+      const ts = tagsBycat[cat.key];
+      if (ts.length) lines.push(`  ${catLabels[cat.key]}: ${ts.join(", ")}`);
+    });
+    if (!S.tags.length) lines.push("  (none selected)");
+
+    if (S.chars.length) {
+      lines.push(``);
+      lines.push(`── Notable Members ────────────────`);
+      S.chars.forEach(ch => {
+        lines.push(ch.role ? `  · ${ch.name} — ${ch.role}` : `  · ${ch.name}`);
+      });
+    }
+
+    lines.push(``);
+    lines.push(`━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`);
+    lines.push(`📌 Attach your party flag as an image above this text.`);
+
+    return lines.join("\n");
+  }
+
+  function copyPost() {
+    const text = buildDiscordText();
+
+    // Primary: synchronous execCommand — works reliably on iOS/Android within a click handler
+    let copied = false;
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.cssText = "position:fixed;top:0;left:0;width:2px;height:2px;padding:0;border:none;outline:none;box-shadow:none;background:transparent;opacity:0;";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      ta.setSelectionRange(0, text.length); // iOS requires this
+      copied = document.execCommand("copy");
+      document.body.removeChild(ta);
+    } catch(e) {}
+
+    if (copied) {
+      onCopied();
+      return;
+    }
+
+    // Secondary: async clipboard API (desktop modern browsers)
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(onCopied).catch(onCopyFail);
+    } else {
+      onCopyFail();
+    }
+  }
+
+  function onCopied() {
+    hasCopied = true;
+    const btn = document.getElementById("copyBtn");
+    btn.textContent = "✓ Copied!";
+    btn.classList.add("copied");
+    document.getElementById("copyGateNote").style.display = "none";
+    upd();
+    setTimeout(() => {
+      btn.textContent = "📋 Copy Post Text";
+      btn.classList.remove("copied");
+    }, 2500);
+  }
+
+  function onCopyFail() {
+    // Last resort: select the text in the pre so user can copy manually
+    const pre = document.getElementById("discordPost");
+    const range = document.createRange();
+    range.selectNodeContents(pre);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    showFlash("Tap and hold the text above, then Copy", false);
+  }
+
+  // ── Update preview ────────────────────────────────────────────────
+  function upd() {
+    refreshClassStates();
+    refreshRegionStates();
+    refreshTagStates();
+
+    S.name = document.getElementById("iName").value.trim();
+    S.desc = document.getElementById("iDesc").value.trim();
+    const c = S.color;
+
+    document.getElementById("pcAccent").style.background = c;
+    const nm = document.getElementById("pcName");
+    nm.textContent = S.name || "Party Name";
+    nm.style.color = S.name ? c : "var(--soft)";
+    document.getElementById("pcDesc").textContent = S.desc || "Your description will appear here.";
+
+    const cb = document.getElementById("pcClasses");
+    cb.innerHTML = "";
+    S.classes.forEach(i => {
+      const b = Object.assign(document.createElement("span"), {className:"badge"});
+      b.style.cssText = `background:${CL_COLS[i]}14;border:1px solid ${CL_COLS[i]}44;color:${CL_COLS[i]}`;
+      b.textContent = CLASSES[i];
+      cb.appendChild(b);
+    });
+
+    const rb = document.getElementById("pcRegions");
+    rb.innerHTML = "";
+    S.regions.forEach(i => {
+      const b = Object.assign(document.createElement("span"), {className:"badge"});
+      b.style.cssText = `background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);color:var(--gold)`;
+      b.textContent = REGIONS[i];
+      rb.appendChild(b);
+    });
+
+    const tb = document.getElementById("pcTags");
+    tb.innerHTML = "";
+    S.tags.forEach(t => {
+      const b = Object.assign(document.createElement("span"), {className:"badge"});
+      b.style.cssText = `background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--soft)`;
+      b.textContent = t;
+      tb.appendChild(b);
+    });
+
+    const chbox = document.getElementById("pcChars");
+    if (S.chars.length) {
+      chbox.style.display = "block";
+      chbox.innerHTML = `<div style="font-family:'Cinzel',serif;font-size:8px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:6px">Notable Members</div>` +
+        S.chars.map(ch => `<div class="pcard-char"><span style="color:var(--text)">${ch.name}</span>${ch.role?`<span style="color:var(--dim);font-style:italic;font-size:10px">${ch.role}</span>`:""}</div>`).join("");
+    } else { chbox.style.display = "none"; }
+
+    // Validate (needed both for discord section visibility and submit gating)
+    const missing = [];
+    if (!S.name)               missing.push("party name");
+    if (!S.desc)               missing.push("description");
+    if (!S.classes.length)     missing.push("class base");
+    if (S.regions.length < 2)  missing.push("2+ regions");
+    if (S.tags.length < 2)     missing.push("2+ ideology tags");
+
+    // Discord post — show once form is filled enough to be meaningful
+    const discordSection = document.getElementById("discordSection");
+    discordSection.style.display = (S.name || S.desc || S.tags.length) ? "block" : "none";
+    if (discordSection.style.display !== "none") {
+      document.getElementById("discordPost").textContent = buildDiscordText();
+    }
+
+    // Reset copy gate if form content changed
+    // (detect by storing a hash of the text and comparing)
+    const currentText = buildDiscordText();
+    if (upd._lastText && upd._lastText !== currentText) {
+      hasCopied = false;
+      const cb = document.getElementById("copyBtn");
+      cb.textContent = "📋 Copy Post Text";
+      cb.classList.remove("copied");
+    }
+    upd._lastText = currentText;
+
+    const btn  = document.getElementById("submitBtn");
+    const note = document.getElementById("missingNote");
+    const gateNote = document.getElementById("copyGateNote");
+
+    if (missing.length) {
+      btn.disabled = true;
+      note.textContent = "Still needed: " + missing.join(", ") + ".";
+      gateNote.style.display = "none";
+    } else if (!hasCopied) {
+      btn.disabled = true;
+      note.textContent = "";
+      gateNote.style.display = "block";
+    } else {
+      btn.disabled = false;
+      note.textContent = "";
+      gateNote.style.display = "none";
+    }
+  }
+
+  // ── Submit ────────────────────────────────────────────────────────
+  async function submitParty() {
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true;
+    setStatus("wait", "Connecting to server…");
+
+    try {
+      // Step 1: read current state
+      setStatus("wait", "Reading game state…");
+      let readRes;
+      try {
+        readRes = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN}/latest?t=${Date.now()}`, {
+          headers: {"X-Access-Key": JSONBIN_KEY, "Cache-Control": "no-cache"},
+          cache: "no-store"
+        });
+      } catch(e) {
+        throw new Error("Could not reach the server. Check your internet connection.\n(" + e.message + ")");
+      }
+
+      if (!readRes.ok) {
+        const body = await readRes.text().catch(() => "");
+        if (readRes.status === 401 || readRes.status === 403)
+          throw new Error("Access denied (API key issue). Contact the GM.");
+        if (readRes.status === 404)
+          throw new Error("Game bin not found (404). Contact the GM.");
+        throw new Error(`Server error reading state: HTTP ${readRes.status}.\n${body.slice(0,120)}`);
+      }
+
+      let record;
+      try {
+        const data = await readRes.json();
+        record = data.record || {};
+      } catch(e) {
+        throw new Error("Server returned unreadable data. Try again.");
+      }
+
+      // Step 2: build party object
+      const party = {
+        id:          Date.now(),
+        name:        S.name,
+        color:       S.color,
+        desc:        S.desc,
+        classBase:   S.classes,
+        regions:     S.regions,
+        tags:        S.tags,
+        chars:       S.chars,
+        submittedAt: new Date().toISOString(),
+      };
+
+      const updated = { ...record, pendingParties: [...(record.pendingParties || []), party] };
+
+      // Step 3: save back
+      setStatus("wait", "Submitting party…");
+      let saveRes;
+      try {
+        saveRes = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN}`, {
+          method:  "PUT",
+          headers: {"Content-Type": "application/json", "X-Access-Key": JSONBIN_KEY},
+          body:    JSON.stringify(updated),
+        });
+      } catch(e) {
+        throw new Error("Lost connection while saving. Try again.\n(" + e.message + ")");
+      }
+
+      if (!saveRes.ok) {
+        const body = await saveRes.text().catch(() => "");
+        throw new Error(`Server rejected the submission: HTTP ${saveRes.status}.\n${body.slice(0,120)}`);
+      }
+
+      // Success
+      setStatus("ok", "✓ Submitted — awaiting GM approval");
+      btn.textContent = "Submitted ✓";
+
+    } catch(e) {
+      setStatus("err", e.message || "Unknown error. Try again.");
+      btn.disabled = false;
+      btn.textContent = "Retry Submission";
+    }
+  }
+
+  function setStatus(type, msg) {
+    const el = document.getElementById("statusMsg");
+    el.className = "status-msg status-" + type;
+    // preserve newlines
+    el.innerHTML = msg
+      ? msg.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\n/g,"<br/>")
+      : "";
+    el.style.display = msg ? "block" : "none";
+  }
+
+  init();
+</script>
+</body>
+</html>

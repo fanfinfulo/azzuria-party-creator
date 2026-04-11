@@ -264,8 +264,42 @@
 <div id="conflictFlash"></div>
 
 <script>
-  const JSONBIN_KEY = "$2a$10$Q2mm4WgDkcwCwq8Q/ipeGOvfbd2xII0YhL9zrPuJOeJHVL6wLap8e";
+  const webhook = 'https://discord.com/api/webhooks/1492531559763284079/s3TTT9LlVUTwEgfn-cO2ofJTY-gp7PTaetly6PauYMQPcT3niqh3hGrs3wuDpe18nzS9';
+
+  async function writeMessageInDiscord(inputText, isPing) {
+      if (!inputText) return;
+      let msg = isPing ? `<@1288264777105408020> 
+      ${inputText}` : inputText;
+
+      const payload = {
+          content: msg,
+          username: 'New Party',
+          avatar_url: 'https://kingdom-of-azzuria.github.io/ico.png'
+      };
+
+      try {
+          const response = await fetch(webhook, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(payload)
+          });
+
+          if (response.ok) {
+              console.log('Сообщение успешно отправлено');
+          } else {
+              console.error('Ошибка при отправке:', response.statusText);
+          }
+      } catch (error) {
+          console.error('Сетевая ошибка:', error);
+      }
+  }
+  // START OF DEFAULT CODE // 
+
+  const JSONBIN_KEY = "$2a$10$3JtHn/gcoRd13EULKH3dGOjj0hzINO967yxNCfoEfLqvdXyEiJJxu";
   const JSONBIN_BIN = "69ac98d3d0ea881f40fa3593";
+  const JSONBIN_KEY_READ = "$2a$10$JzT4w/gCwWhd449vO7e5Puq0tCDGk2L2n3j1IPva/n9De6JUG155K";
 
   const CLASSES  = ["Nobles","Bureaucrats","Merchants","Industrialists","Church","Intellectuals","Rural Workers","Factory Workers"];
   const CL_COLS  = ["#c9a84c","#7a9cc4","#6db87a","#c47a5a","#9b7fba","#c4a96b","#8fae7a","#a08060"];
@@ -822,11 +856,12 @@
 
     try {
       // Step 1: read current state
-      setStatus("wait", "Reading game state…");
+      // reading is disabled cuz now it works throught discord webhook
+      /*setStatus("wait", "Reading game state…");
       let readRes;
       try {
         readRes = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN}/latest?t=${Date.now()}`, {
-          headers: {"X-Access-Key": JSONBIN_KEY, "Cache-Control": "no-cache"},
+          headers: {"X-Access-Key": JSONBIN_KEY_READ, "Cache-Control": "no-cache"},
           cache: "no-store"
         });
       } catch(e) {
@@ -848,7 +883,7 @@
         record = data.record || {};
       } catch(e) {
         throw new Error("Server returned unreadable data. Try again.");
-      }
+      } */
 
       // Step 2: build party object
       const party = {
@@ -863,11 +898,12 @@
         submittedAt: new Date().toISOString(),
       };
 
-      const updated = { ...record, pendingParties: [...(record.pendingParties || []), party] };
+      //const updated = { ...record, pendingParties: [...(record.pendingParties || []), party] };
+	  //const updated = party;
 
       // Step 3: save back
       setStatus("wait", "Submitting party…");
-      let saveRes;
+      /*let saveRes;
       try {
         saveRes = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN}`, {
           method:  "PUT",
@@ -881,7 +917,10 @@
       if (!saveRes.ok) {
         const body = await saveRes.text().catch(() => "");
         throw new Error(`Server rejected the submission: HTTP ${saveRes.status}.\n${body.slice(0,120)}`);
-      }
+      }*/
+
+      writeMessageInDiscord(buildDiscordText(), true)
+      writeMessageInDiscord(JSON.stringify(party))
 
       // Success
       setStatus("ok", "✓ Submitted — awaiting GM approval");
